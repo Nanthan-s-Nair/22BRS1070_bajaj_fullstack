@@ -3,6 +3,9 @@
 from flask import Flask, request, jsonify
 import os
 app = Flask(__name__)
+@app.route("/", methods=["GET"])
+def home():
+    return "BFHL API is running. Use POST /bfhl to get results."
 @app.route("/bfhl", methods=["POST"])
 def bfhl():
     try:
@@ -14,20 +17,19 @@ def bfhl():
         s = []
         t = 0
         for i in a:
-            if i.isdigit():
+            if isinstance(i, str) and i.isdigit():
                 if int(i) % 2 == 0:
                     e.append(i)
                 else:
                     o.append(i)
                 t += int(i)
-            elif i.isalpha():
+            elif isinstance(i, str) and i.isalpha():
                 x.append(i.upper())
             else:
                 s.append(i)
         c = "".join(x)[::-1]
-        r = ""
-        for j, k in enumerate(c):
-            r += k.upper() if j % 2 == 0 else k.lower()
+        r = "".join(k.upper() if j % 2 == 0 else k.lower() for j, k in enumerate(c))
+
         res = {
             "is_success": True,
             "user_id": "nanthan_nair_06012003",
@@ -41,8 +43,6 @@ def bfhl():
             "concat_string": r
         }
         return jsonify(res), 200
+
     except Exception as f:
         return jsonify({"is_success": False, "error": str(f)}), 400
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
