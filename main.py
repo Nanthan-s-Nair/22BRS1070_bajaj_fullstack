@@ -1,5 +1,7 @@
-#Nanthan S Nair
+# main.py
+# Nanthan S Nair
 from flask import Flask, request, jsonify
+import os
 app = Flask(__name__)
 @app.route("/bfhl", methods=["POST"])
 def bfhl():
@@ -42,4 +44,5 @@ def bfhl():
     except Exception as f:
         return jsonify({"is_success": False, "error": str(f)}), 400
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
